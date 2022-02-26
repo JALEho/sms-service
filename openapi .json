@@ -1,0 +1,1494 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "rent.sms-service-online.com",
+    "version": "1.0.0"
+  },
+  "tags": [
+    {
+      "name": "auth",
+      "description": "Authorization methods"
+    },
+    {
+      "name": "public",
+      "description": "Public methods"
+    },
+    {
+      "name": "private",
+      "description": "Private methods"
+    }
+  ],
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Get a JWT via given credentials",
+        "operationId": "authLogin",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "description": "user's email",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "description": "user's password",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Token"
+                }
+              }
+            }
+          },
+          "418": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "msg": "Not found user or not correct password"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/me": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Get the authenticated User",
+        "operationId": "authMe",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Invalid input"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "write:auth",
+              "read:auth"
+            ]
+          }
+        ]
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Refresh a token",
+        "operationId": "authRefresh",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Token"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Invalid input"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "write:auth",
+              "read:auth"
+            ]
+          }
+        ]
+      }
+    },
+    "/getCountriesList": {
+      "post": {
+        "tags": [
+          "public"
+        ],
+        "summary": "Fetch countries",
+        "operationId": "getCountriesList",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "msg": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "label": {
+                            "type": "string"
+                          },
+                          "value": {
+                            "type": "integer"
+                          },
+                          "code": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "example": [
+                        {
+                          "label": "Россия",
+                          "value": 0,
+                          "code": "ru"
+                        },
+                        {
+                          "label": "Украина",
+                          "value": 1,
+                          "code": "ua"
+                        },
+                        {
+                          "label": "Казахстан",
+                          "value": 2,
+                          "code": "kz"
+                        }
+                      ]
+                    },
+                    "server_time": {
+                      "type": "integer",
+                      "example": 1634813221
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/getDateRent": {
+      "post": {
+        "tags": [
+          "public"
+        ],
+        "summary": "Fetch periods",
+        "operationId": "getDateRent",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "msg": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "label": {
+                            "type": "string"
+                          },
+                          "value": {
+                            "type": "integer"
+                          }
+                        }
+                      },
+                      "example": [
+                        {
+                          "label": "1 день",
+                          "value": 1
+                        },
+                        {
+                          "label": "2 дня",
+                          "value": 2
+                        },
+                        {
+                          "label": "3 дня",
+                          "value": 3
+                        }
+                      ]
+                    },
+                    "server_time": {
+                      "type": "integer",
+                      "example": 1634813221
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/getServicesList": {
+      "post": {
+        "tags": [
+          "public"
+        ],
+        "summary": "Fetch services",
+        "operationId": "getServicesList",
+        "parameters": [
+          {
+            "name": "country",
+            "in": "query",
+            "description": "country value from getCountriesList",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "days",
+            "in": "query",
+            "description": "period value from getDateRent",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "msg": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "label": {
+                            "type": "string"
+                          },
+                          "value": {
+                            "type": "integer"
+                          },
+                          "name_img": {
+                            "type": "string"
+                          },
+                          "price": {
+                            "type": "integer"
+                          },
+                          "count": {
+                            "type": "integer"
+                          },
+                          "prices": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "value": {
+                                  "type": "integer"
+                                },
+                                "label": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "example": [
+                        {
+                          "label": "Любой Сайт",
+                          "value": "full",
+                          "name_img": null,
+                          "price": 590.02,
+                          "count": 442,
+                          "prices": [
+                            {
+                              "value": 590.02,
+                              "label": "rub"
+                            },
+                            {
+                              "value": 8.05,
+                              "label": "usd"
+                            }
+                          ]
+                        },
+                        {
+                          "label": "OkCupid",
+                          "value": "vm",
+                          "name_img": null,
+                          "price": 40.32,
+                          "count": 1244,
+                          "prices": [
+                            {
+                              "value": 40.32,
+                              "label": "rub"
+                            },
+                            {
+                              "value": 0.55,
+                              "label": "usd"
+                            }
+                          ]
+                        },
+                        {
+                          "label": "888casino",
+                          "value": "ll",
+                          "name_img": "ll.png",
+                          "price": 588,
+                          "count": 148,
+                          "prices": [
+                            {
+                              "value": 588,
+                              "label": "rub"
+                            },
+                            {
+                              "value": 8.02,
+                              "label": "usd"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "server_time": {
+                      "type": "integer",
+                      "example": 1634813221
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/orderNumbers": {
+      "post": {
+        "tags": [
+          "private"
+        ],
+        "summary": "Rent numbers",
+        "operationId": "orderNumbers",
+        "parameters": [
+          {
+            "name": "country",
+            "in": "query",
+            "description": "country value from getCountriesList",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "service",
+            "in": "query",
+            "description": "service value from getServicesList",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "days",
+            "in": "query",
+            "description": "period value from getDateRent",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "description": "count of numbers for rent",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/OrderNumbersSuccess"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                  ]
+                },
+                "examples": {
+                  "success": {
+                    "summary": "Successful response"
+                  },
+                  "error": {
+                    "$ref": "#/components/examples/ErrorResponse"
+                  }
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Invalid input"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "write:auth",
+              "read:auth"
+            ]
+          },
+          {
+            "apiKeyAuth": [
+              "write:auth",
+              "read:auth"
+            ]
+          }
+        ]
+      }
+    },
+    "/getMessagesForNumber": {
+      "post": {
+        "tags": [
+          "private"
+        ],
+        "summary": "Fetch Messages",
+        "operationId": "getMessagesForNumber",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "id of the order, which received after successful rent",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/GetMessagesSuccess"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                  ]
+                },
+                "examples": {
+                  "success": {
+                    "summary": "Successful Response"
+                  },
+                  "error": {
+                    "$ref": "#/components/examples/ErrorResponse"
+                  }
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Invalid input"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "write:auth",
+              "read:auth"
+            ]
+          },
+          {
+            "apiKeyAuth": [
+              "write:auth",
+              "read:auth"
+            ]
+          }
+        ]
+      }
+    },
+    "/requestCancelNumber": {
+      "post": {
+        "tags": [
+          "private"
+        ],
+        "summary": "Request cancel number",
+        "description": "Return response if number can be canceled. Can be \"refund\" or \"cancel\"",
+        "operationId": "requestCancelNumber",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "id of the order, which received after successful rent",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/CanCancelNumber"
+                    },
+                    {
+                      "$ref": "#/components/schemas/CanRefundNumber"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                  ]
+                },
+                "examples": {
+                  "cancel": {
+                    "summary": "Cancel"
+                  },
+                  "refund": {
+                    "summary": "Refund",
+                    "value": {
+                      "success": true,
+                      "msg": "You can refund number",
+                      "data": {
+                        "id": 40,
+                        "type": "refund"
+                      },
+                      "server_time": 1634813221
+                    }
+                  },
+                  "error": {
+                    "$ref": "#/components/examples/ErrorResponse"
+                  }
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Invalid input"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "write:auth",
+              "read:auth"
+            ]
+          },
+          {
+            "apiKeyAuth": [
+              "write:auth",
+              "read:auth"
+            ]
+          }
+        ]
+      }
+    },
+    "/cancelNumber": {
+      "post": {
+        "tags": [
+          "private"
+        ],
+        "summary": "Cancel rent",
+        "operationId": "cancelNumber",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "id of the order, which received after successful rent",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/CancelNumberSuccess"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                  ]
+                },
+                "examples": {
+                  "cancel": {
+                    "summary": "Successful Response"
+                  },
+                  "error": {
+                    "$ref": "#/components/examples/ErrorResponse"
+                  }
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Invalid input"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "write:auth",
+              "read:auth"
+            ]
+          },
+          {
+            "apiKeyAuth": [
+              "write:auth",
+              "read:auth"
+            ]
+          }
+        ]
+      }
+    },
+    "/requestExtendNumber": {
+      "post": {
+        "tags": [
+          "private"
+        ],
+        "summary": "Request extend number",
+        "description": "Return response if number can be extended.",
+        "operationId": "requestExtendNumber",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "id of the order, which received after successful rent",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/CanExtendNumber"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                  ]
+                },
+                "examples": {
+                  "cancel": {
+                    "summary": "Successful Response"
+                  },
+                  "error": {
+                    "$ref": "#/components/examples/ErrorResponse"
+                  }
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Invalid input"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "write:auth",
+              "read:auth"
+            ]
+          },
+          {
+            "apiKeyAuth": [
+              "write:auth",
+              "read:auth"
+            ]
+          }
+        ]
+      }
+    },
+    "/getPriceExtendNumber": {
+      "post": {
+        "tags": [
+          "private"
+        ],
+        "summary": "Get price for rent extend",
+        "operationId": "getPriceExtendNumber",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "id of the order, which received after successful rent",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ExtendNumberPrice"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                  ]
+                },
+                "examples": {
+                  "cancel": {
+                    "summary": "Successful Response"
+                  },
+                  "error": {
+                    "$ref": "#/components/examples/ErrorResponse"
+                  }
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Invalid input"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "write:auth",
+              "read:auth"
+            ]
+          },
+          {
+            "apiKeyAuth": [
+              "write:auth",
+              "read:auth"
+            ]
+          }
+        ]
+      }
+    },
+    "/extendNumber": {
+      "post": {
+        "tags": [
+          "private"
+        ],
+        "summary": "Extend rent",
+        "operationId": "extendNumber",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "id of the order, which received after successful rent",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ExtendNumberSuccess"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    }
+                  ]
+                },
+                "examples": {
+                  "cancel": {
+                    "summary": "Successful Response"
+                  },
+                  "error": {
+                    "$ref": "#/components/examples/ErrorResponse"
+                  }
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Invalid input"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "write:auth",
+              "read:auth"
+            ]
+          },
+          {
+            "apiKeyAuth": [
+              "write:auth",
+              "read:auth"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 10
+          },
+          "email": {
+            "type": "string",
+            "example": "john@email.com"
+          },
+          "api_key": {
+            "type": "string",
+            "example": "test-1234-test-1234-test"
+          },
+          "balances": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "integer"
+                }
+              }
+            },
+            "example": [
+              {
+                "label": "rub",
+                "value": 3354.64
+              },
+              {
+                "lable": "usd",
+                "value": 666
+              }
+            ]
+          }
+        }
+      },
+      "Token": {
+        "type": "object",
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvcmVudC1hcGkuc21zLXNlcnZpY2Utb25saW5lLmNvbVwvYXBpXC9hdXRoXC9sb2dpbiIsImlhdCI6MTYzNDc0NDQ4OSwiZXhwIjoxNjM0NzQ4MDg5LCJuYmYiOjE2MzQ3NDQ0ODksImp0aSI6ImVERGl4S0JZcGNCZlBEMnEiLCJzdWIiOjEsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.Y18EGZPlPM6asHJlvxUNa1k4c2xwbpJGcaxDq4cTq9o"
+          },
+          "token_type": {
+            "type": "string",
+            "example": "bearer"
+          },
+          "expires_in": {
+            "type": "integer",
+            "example": 3600
+          },
+          "user": {
+            "$ref": "#/components/schemas/User"
+          }
+        }
+      },
+      "OrderNumbersSuccess": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "msg": {
+            "type": "string",
+            "example": "Success"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                },
+                "msg": {
+                  "type": "string"
+                },
+                "id": {
+                  "type": "integer"
+                },
+                "number": {
+                  "type": "string"
+                },
+                "ncode": {
+                  "type": "string"
+                },
+                "service": {
+                  "type": "object",
+                  "properties": {
+                    "label": {
+                      "type": "string"
+                    },
+                    "value": {
+                      "type": "string"
+                    },
+                    "name_img": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "country": {
+                  "type": "object",
+                  "properties": {
+                    "label": {
+                      "type": "string"
+                    },
+                    "value": {
+                      "type": "string"
+                    },
+                    "name_img": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "until": {
+                  "type": "integer"
+                },
+                "activated": {
+                  "type": "integer"
+                }
+              }
+            },
+            "example": [
+              {
+                "success": true,
+                "msg": "Success",
+                "id": 213,
+                "number": "79331097024",
+                "ncode": "+",
+                "service": {
+                  "label": "AOL",
+                  "value": "pm",
+                  "name_img": "pm.jpg"
+                },
+                "country": {
+                  "label": "Россия",
+                  "value": "0",
+                  "code": "ru"
+                },
+                "until": 1634914652,
+                "activated": 1
+              },
+              {
+                "success": false,
+                "msg": "Some error"
+              }
+            ]
+          },
+          "user": {
+            "type": "object",
+            "properties": {
+              "balances": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "label": {
+                      "type": "string"
+                    },
+                    "value": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            },
+            "example": {
+              "balances": [
+                {
+                  "label": "rub",
+                  "value": 2808.89
+                },
+                {
+                  "label": "usd",
+                  "value": 221
+                }
+              ]
+            }
+          },
+          "server_time": {
+            "type": "integer",
+            "example": 1634813221
+          }
+        }
+      },
+      "GetMessagesSuccess": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "msg": {
+            "type": "string",
+            "example": "Success"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "messages": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "sender": {
+                        "type": "string"
+                      },
+                      "text": {
+                        "type": "string"
+                      },
+                      "time": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "example": {
+              "id": 40,
+              "messages": [
+                {
+                  "sender": "FACEBOOK",
+                  "text": "Kod podtverzdenia akkaunta Instagram: 145 692.",
+                  "time": 1633359027
+                },
+                {
+                  "sender": "Facebook",
+                  "text": "Kod podtverzdenia akkaunta Instagram: 145 692.",
+                  "time": 1633358866
+                }
+              ]
+            }
+          },
+          "server_time": {
+            "type": "integer",
+            "example": 1634813221
+          }
+        }
+      },
+      "CanCancelNumber": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "msg": {
+            "type": "string",
+            "example": "You can cancel number"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "type": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "id": 40,
+              "type": "cancel"
+            }
+          },
+          "server_time": {
+            "type": "integer",
+            "example": 1634813221
+          }
+        }
+      },
+      "CanRefundNumber": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "msg": {
+            "type": "string",
+            "example": "You can refund number"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "type": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "id": 40,
+              "type": "refund"
+            }
+          },
+          "server_time": {
+            "type": "integer",
+            "example": 1634813221
+          }
+        }
+      },
+      "CancelNumberSuccess": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "msg": {
+            "type": "string",
+            "example": "Success"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer"
+              }
+            },
+            "example": {
+              "id": 40
+            }
+          },
+          "user": {
+            "type": "object",
+            "example": {
+              "balances": [
+                {
+                  "label": "rub",
+                  "value": 3354.64
+                },
+                {
+                  "lable": "usd",
+                  "value": 665
+                }
+              ]
+            }
+          },
+          "server_time": {
+            "type": "integer",
+            "example": 1634813221
+          }
+        }
+      },
+      "CanExtendNumber": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "msg": {
+            "type": "string",
+            "example": "You can extend number"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer"
+              }
+            },
+            "example": {
+              "id": 40
+            }
+          },
+          "server_time": {
+            "type": "integer",
+            "example": 1634813221
+          }
+        }
+      },
+      "ExtendNumberPrice": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "msg": {
+            "type": "string",
+            "example": "Success"
+          },
+          "amount": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "example": {
+              "label": "rub",
+              "value": 725
+            }
+          },
+          "server_time": {
+            "type": "integer",
+            "example": 1634813221
+          }
+        }
+      },
+      "ExtendNumberSuccess": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "msg": {
+            "type": "string",
+            "example": "Success"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "number": {
+                  "type": "string"
+                },
+                "ncode": {
+                  "type": "string"
+                },
+                "service": {
+                  "type": "object",
+                  "properties": {
+                    "label": {
+                      "type": "string"
+                    },
+                    "value": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "country": {
+                  "type": "object",
+                  "properties": {
+                    "label": {
+                      "type": "string"
+                    },
+                    "value": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "until": {
+                  "type": "integer"
+                }
+              }
+            },
+            "example": [
+              {
+                "id": 213,
+                "number": "79331097024",
+                "ncode": "+",
+                "service": {
+                  "label": "AOL",
+                  "value": "pm"
+                },
+                "country": {
+                  "label": "Россия",
+                  "value": "0"
+                },
+                "until": 1634914652
+              }
+            ]
+          },
+          "user": {
+            "type": "object",
+            "properties": {
+              "balances": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "label": {
+                      "type": "string"
+                    },
+                    "value": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            },
+            "example": {
+              "balances": [
+                {
+                  "label": "rub",
+                  "value": 2808.89
+                },
+                {
+                  "label": "usd",
+                  "value": 221
+                }
+              ]
+            }
+          },
+          "server_time": {
+            "type": "integer",
+            "example": 1634813221
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": false
+          },
+          "msg": {
+            "type": "string",
+            "example": "Only for authorized users"
+          },
+          "data": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "examples": {
+      "ErrorResponse": {
+        "summary": "Error response",
+        "value": {
+          "success": false,
+          "msg": "Only for authorized users",
+          "data": []
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      },
+      "apiKeyAuth": {
+        "type": "apiKey",
+        "in": "query",
+        "name": "api_key"
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "https://rent.sms-service-online.com/api",
+      "variables": {}
+    }
+  ]
+}
